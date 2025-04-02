@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>List Product | FuwMarketplace</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="IMAGES/FUW LOGO.ico">
+    <!-- Cropper.js CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #039237;
+            --primary-dark: #027530;
+            --light: #AADBBB;
+            --dark: #0B0C08;
+            --gray: #F5F5F5;
+            --white: #FFFFFF;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray);
+            color: var(--dark);
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+        }
+
+        /* Header (Reuse from previous pages) */
+        header {
+            background-color: var(--white);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            padding: 15px 0;
+            margin-bottom: 30px;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo img {
+            height: 40px;
+        }
+
+        /* Form Section */
+        .form-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+
+        .form-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(3, 146, 55, 0.2);
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        .file-upload {
+            border: 2px dashed #ddd;
+            padding: 20px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-upload:hover {
+            border-color: var(--primary);
+        }
+
+        .file-upload i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 10px;
+        }
+
+        #image-preview {
+            max-width: 100%;
+            margin-top: 15px;
+            border-radius: 5px;
+            display: none;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        /* Preview Section */
+        .preview-section {
+            background-color: var(--white);
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 20px;
+            height: fit-content;
+        }
+
+        .preview-title {
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            color: var(--primary);
+        }
+
+        .product-preview {
+            border: 1px solid #eee;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        .preview-image {
+            width: 100%;
+            height: 250px;
+            background-color: #f9f9f9;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ccc;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+
+        .preview-details {
+            padding: 20px;
+        }
+
+        .preview-name {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--dark);
+        }
+
+        .preview-price {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .preview-description {
+            color: #555;
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+
+        .preview-contact {
+            font-size: 0.9rem;
+            color: #777;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+            }
+
+            .preview-section {
+                position: static;
+                margin-top: 30px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <nav class="navbar">
+            <a href="index.html" class="logo">
+                <img src="IMAGES/FUW LOGO.png" alt="FUW Logo">
+            </a>
+            <div class="nav-links">
+                <a href="index.html">Home</a>
+                <a href="browse.html">Browse</a>
+                <a href="sell.html" class="active">Sell</a>
+                <a href="profile.html">Profile</a>
+            </div>
+        </nav>
+    </header>
+
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Product Form -->
+        <section class="form-section">
+            <h2 class="form-title">List Your Product</h2>
+            <form id="product-form">
+                <div class="form-group">
+                    <label for="product-title">Title</label>
+                    <input type="text" id="product-title" class="form-control" placeholder="e.g. Calculus Textbook - 3rd Edition" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-category">Category</label>
+                    <select id="product-category" class="form-control" required>
+                        <option value="" disabled selected>Select a category</option>
+                        <option value="books">Books</option>
+                        <option value="electronics">Electronics</option>
+                        <option value="furniture">Furniture</option>
+                        <option value="fashion">Fashion</option>
+                        <option value="others">Others</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-price">Price (₦)</label>
+                    <input type="number" id="product-price" class="form-control" placeholder="e.g. 5000" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-description">Description</label>
+                    <textarea id="product-description" class="form-control" placeholder="Describe your product in detail..." required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="product-contact">Contact Info (WhatsApp)</label>
+                    <input type="tel" id="product-contact" class="form-control" placeholder="Your WhatsApp number" required>
+                </div>
+
+                <div class="form-group">
+                    <label>Product Image</label>
+                    <div class="file-upload" id="upload-area">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag & drop</p>
+                        <p class="small">PNG, JPG (Max. 5MB)</p>
+                        <input type="file" id="product-image" accept="image/*" style="display: none;">
+                    </div>
+                    <img id="image-preview" alt="Preview">
+                </div>
+
+                <button type="submit" class="btn btn-primary">List Product</button>
+            </form>
+        </section>
+
+        <!-- Live Preview -->
+        <section class="preview-section">
+            <h2 class="preview-title">Product Preview</h2>
+            <div class="product-preview">
+                <div class="preview-image">
+                    <img id="preview-img" alt="Product image">
+                    <p id="no-image-text">Image preview will appear here</p>
+                </div>
+                <div class="preview-details">
+                    <h3 id="preview-name" class="preview-name">Product Title</h3>
+                    <p id="preview-price" class="preview-price">₦0</p>
+                    <p id="preview-description" class="preview-description">Product description will appear here.</p>
+                    <p class="preview-contact"><strong>Contact:</strong> <span id="preview-contact">Not specified</span></p>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Live Preview Update
+        document.getElementById('product-title').addEventListener('input', updatePreview);
+        document.getElementById('product-price').addEventListener('input', updatePreview);
+        document.getElementById('product-description').addEventListener('input', updatePreview);
+        document.getElementById('product-contact').addEventListener('input', updatePreview);
+        document.getElementById('product-image').addEventListener('change', handleImageUpload);
+
+        // Update preview function
+        function updatePreview() {
+            document.getElementById('preview-name').textContent = 
+                document.getElementById('product-title').value || 'Product Title';
+            
+            const price = document.getElementById('product-price').value;
+            document.getElementById('preview-price').textContent = 
+                price ? `₦${parseInt(price).toLocaleString()}` : '₦0';
+            
+            document.getElementById('preview-description').textContent = 
+                document.getElementById('product-description').value || 'Product description will appear here.';
+            
+            document.getElementById('preview-contact').textContent = 
+                document.getElementById('product-contact').value || 'Not specified';
+        }
+
+        // Handle image upload
+        function handleImageUpload(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    const previewImg = document.getElementById('preview-img');
+                    const noImageText = document.getElementById('no-image-text');
+                    const formPreview = document.getElementById('image-preview');
+                    
+                    previewImg.src = event.target.result;
+                    previewImg.style.display = 'block';
+                    noImageText.style.display = 'none';
+                    
+                    formPreview.src = event.target.result;
+                    formPreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Upload area click handler
+        document.getElementById('upload-area').addEventListener('click', function() {
+            document.getElementById('product-image').click();
+        });
+
+        // Form submission
+        document.getElementById('product-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Product listed successfully! It will be visible after verification.');
+            // In a real app: Send data to backend
+            this.reset();
+            resetPreview();
+        });
+
+        // Reset preview
+        function resetPreview() {
+            document.getElementById('preview-name').textContent = 'Product Title';
+            document.getElementById('preview-price').textContent = '₦0';
+            document.getElementById('preview-description').textContent = 'Product description will appear here.';
+            document.getElementById('preview-contact').textContent = 'Not specified';
+            
+            const previewImg = document.getElementById('preview-img');
+            previewImg.src = '';
+            previewImg.style.display = 'none';
+            document.getElementById('no-image-text').style.display = 'block';
+            
+            document.getElementById('image-preview').style.display = 'none';
+        }
+    </script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    
+    <!-- Cropper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+
+    <script>
+        // Your Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCdhUToigY6Ew7nd4YbuX6pO-YfIzUrQrA",
+            authDomain: "fuwmarketplace-a5cbd.firebaseapp.com",
+            projectId: "fuwmarketplace-a5cbd",
+            storageBucket: "fuwmarketplace-a5cbd.appspot.com",
+            messagingSenderId: "754997773414",
+            appId: "1:754997773414:web:71ad0c1a323a12748399a7"
+        };
+
+        // Initialize Firebase
+        const app = firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+        const auth = firebase.auth();
+
+        // Category-Specific Fields
+        document.getElementById('product-category').addEventListener('change', function() {
+            // Hide all conditional fields first
+            document.querySelectorAll('.conditional-field').forEach(field => {
+                field.style.display = 'none';
+            });
+
+            // Show relevant fields
+            const category = this.value;
+            if (category === 'books') {
+                document.getElementById('book-fields').style.display = 'block';
+            } else if (category === 'electronics') {
+                document.getElementById('electronics-fields').style.display = 'block';
+            }
+            
+            // Update preview
+            updatePreview();
+        });
+
+        // Image Cropping
+        let cropper;
+        document.getElementById('product-image').addEventListener('change', function(e) {
+            if (e.target.files.length) {
+                const reader = new FileReader();
+                reader.onload = function(event) {
+                    document.getElementById('cropper-image').src = event.target.result;
+                    document.getElementById('crop-modal').style.display = 'block';
+                    
+                    // Initialize cropper
+                    const image = document.getElementById('cropper-image');
+                    if (cropper) {
+                        cropper.destroy();
+                    }
+                    cropper = new Cropper(image, {
+                        aspectRatio: 1,
+                        viewMode: 1,
+                        autoCropArea: 0.8
+                    });
+                };
+                reader.readAsDataURL(e.target.files[0]);
+            }
+        });
+
+        // Crop Actions
+        document.getElementById('cancel-crop').addEventListener('click', function() {
+            document.getElementById('crop-modal').style.display = 'none';
+            document.getElementById('product-image').value = '';
+            if (cropper) {
+                cropper.destroy();
+            }
+        });
+
+        document.getElementById('apply-crop').addEventListener('click', function() {
+            const canvas = cropper.getCroppedCanvas({
+                width: 800,
+                height: 800,
+                minWidth: 400,
+                minHeight: 400,
+                maxWidth: 2000,
+                maxHeight: 2000,
+                fillColor: '#fff',
+                imageSmoothingEnabled: true,
+                imageSmoothingQuality: 'high'
+            });
+
+            canvas.toBlob(function(blob) {
+                // Update preview
+                const url = URL.createObjectURL(blob);
+                document.getElementById('preview-img').src = url;
+                document.getElementById('preview-img').style.display = 'block';
+                document.getElementById('no-image-text').style.display = 'none';
+                
+                // Store the blob for later upload
+                document.getElementById('product-image').croppedBlob = blob;
+                
+                document.getElementById('crop-modal').style.display = 'none';
+                if (cropper) {
+                    cropper.destroy();
+                }
+            }, 'image/jpeg', 0.9);
+        });
+
+        // Form Submission with Firebase
+        document.getElementById('product-form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            // Check if user is logged in
+            const user = auth.currentUser;
+            if (!user) {
+                alert('Please login to list a product');
+                return;
+            }
+
+            const product = {
+                title: document.getElementById('product-title').value,
+                category: document.getElementById('product-category').value,
+                price: parseFloat(document.getElementById('product-price').value),
+                description: document.getElementById('product-description').value,
+                contact: document.getElementById('product-contact').value,
+                createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+                sellerId: user.uid,
+                sellerName: user.displayName || "Anonymous"
+            };
+
+            // Add category-specific fields
+            if (product.category === 'books') {
+                product.condition = document.getElementById('book-condition').value;
+                product.author = document.getElementById('book-author').value;
+            } else if (product.category === 'electronics') {
+                product.brand = document.getElementById('electronics-brand').value;
+                product.model = document.getElementById('electronics-model').value;
+            }
+
+            try {
+                // Upload image if exists
+                if (document.getElementById('product-image').croppedBlob) {
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`products/${user.uid}/${Date.now()}.jpg`);
+                    await fileRef.put(document.getElementById('product-image').croppedBlob);
+                    product.imageUrl = await fileRef.getDownloadURL();
+                }
+
+                // Save to Firestore
+                await db.collection('products').add(product);
+                
+                alert('Product listed successfully!');
+                window.location.href = 'profile.html'; // Redirect to user's profile
+            } catch (error) {
+                console.error('Error adding product: ', error);
+                alert('Error listing product. Please try again.');
+            }
+        });
+
+        // Update preview
+        function updatePreview() {
+            document.getElementById('preview-name').textContent = 
+                document.getElementById('product-title').value || 'Product Title';
+            
+            const price = document.getElementById('product-price').value;
+            document.getElementById('preview-price').textContent = 
+                price ? `₦${parseInt(price).toLocaleString()}` : '₦0';
+            
+            document.getElementById('preview-description').textContent = 
+                document.getElementById('product-description').value || 'Product description will appear here.';
+            
+            document.getElementById('preview-contact').textContent = 
+                document.getElementById('product-contact').value || 'Not specified';
+            
+            const category = document.getElementById('product-category').value;
+            if (category) {
+                document.getElementById('preview-category').textContent = 
+                    document.querySelector(`#product-category option[value="${category}"]`).textContent;
+                document.getElementById('preview-category').style.display = 'inline-block';
+            } else {
+                document.getElementById('preview-category').style.display = 'none';
+            }
+        }
+
+        // Initialize preview and form fields
+        document.addEventListener('DOMContentLoaded', function() {
+            updatePreview();
+            
+            // Add event listeners for preview updates
+            document.getElementById('product-title').addEventListener('input', updatePreview);
+            document.getElementById('product-price').addEventListener('input', updatePreview);
+            document.getElementById('product-description').addEventListener('input', updatePreview);
+            document.getElementById('product-contact').addEventListener('input', updatePreview);
+        });
+    </script>
+</body>
+</html>

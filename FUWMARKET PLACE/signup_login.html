@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FuwMarketplace - Sign Up/Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="icon" href="IMAGES/FUW LOGO.ico">
+    <style>
+        :root {
+            --primary: #039237;
+            --primary-dark: #027530;
+            --secondary: #93B3A2;
+            --light: #AADBBB;
+            --dark: #0B0C08;
+            --white: #FFFFFF;
+            --gray: #F5F5F5;
+            --error: #E74C3C;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--gray);
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-container {
+            background-color: var(--white);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 500px;
+            padding: 40px;
+            text-align: center;
+        }
+
+        .logo {
+            margin-bottom: 30px;
+        }
+
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+
+        .logo span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .tab {
+            flex: 1;
+            padding: 15px;
+            cursor: pointer;
+            font-weight: 600;
+            color: #777;
+            transition: all 0.3s;
+        }
+
+        .tab.active {
+            color: var(--primary);
+            border-bottom: 3px solid var(--primary);
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--dark);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+            transition: border 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(3, 146, 55, 0.2);
+        }
+
+        .whatsapp-note {
+            font-size: 0.85rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-primary {
+            background-color: var(--primary);
+            color: var(--white);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-dark);
+        }
+
+        .divider {
+            margin: 25px 0;
+            position: relative;
+            text-align: center;
+            color: #777;
+        }
+
+        .divider::before {
+            content: "";
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background-color: #ddd;
+            z-index: -1;
+        }
+
+        .divider span {
+            background-color: var(--white);
+            padding: 0 15px;
+        }
+
+        .social-login {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+            transition: transform 0.3s;
+        }
+
+        .social-btn:hover {
+            transform: translateY(-3px);
+        }
+
+        .facebook {
+            background-color: #3B5998;
+        }
+
+        .google {
+            background-color: #DB4437;
+        }
+
+        .footer-text {
+            margin-top: 20px;
+            color: #666;
+        }
+
+        .footer-text a {
+            color: var(--primary);
+            font-weight: 500;
+        }
+
+        .error-message {
+            color: var(--error);
+            font-size: 0.85rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        @media (max-width: 576px) {
+            .auth-container {
+                padding: 30px 20px;
+            }
+            
+            .logo img {
+                height: 40px;
+            }
+            
+            .logo span {
+                font-size: 1.5rem;
+            }
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="auth-container">
+            <div class="logo">
+                <img src="IMAGES/FUW LOGO.png" alt="FUW Logo">
+                <span>FuwMarketplace</span>
+            </div>
+
+            <div class="tabs">
+                <div class="tab active" onclick="switchTab('signup')">Sign Up</div>
+                <div class="tab" onclick="switchTab('login')">Login</div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <form id="signup-form">
+                <div class="form-group">
+                    <label for="fullname">Full Name</label>
+                    <input type="text" id="fullname" class="form-control" placeholder="Enter your full name" required>
+                    <div class="error-message" id="name-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="matric">Matriculation Number</label>
+                    <input type="text" id="matric" class="form-control" placeholder="ENG/COE/21/013" required>
+                    <div class="error-message" id="matric-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <select id="department" class="form-control" required>
+                        <option value="" disabled selected>Select your department</option>
+                        <option value="computer_science">Computer Science</option>
+                        <option value="biochemistry">Biochemistry</option>
+                        <option value="economics">Economics</option>
+                        <option value="law">Law</option>
+                        <option value="medicine">Medicine</option>
+                        <option value="medicine">Computer Engineering</option>
+                        <option value="medicine">Agric Engineering</option>
+                        <!-- Add more departments as needed -->
+                    </select>
+                    <div class="error-message" id="dept-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">WhatsApp Number</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="e.g. 08012345678" required>
+                    <div class="whatsapp-note">Only WhatsApp numbers will be accepted for verification</div>
+                    <div class="error-message" id="phone-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Create a password" required>
+                    <div class="error-message" id="password-error"></div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Create Account</button>
+            </form>
+
+            <!-- Login Form (Hidden by default) -->
+            <form id="login-form" style="display: none;">
+                <div class="form-group">
+                    <label for="login-matric">Matriculation Number</label>
+                    <input type="text" id="login-matric" class="form-control" placeholder="ENG/COE/21/013" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" class="form-control" placeholder="Enter your password" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Login</button>
+
+                <div class="divider">
+                    <span>OR</span>
+                </div>
+
+                <div class="social-login">
+                    <a href="#" class="social-btn facebook">
+                        <i class="fab fa-facebook-f"></i>
+                    </a>
+                    <a href="#" class="social-btn google">
+                        <i class="fab fa-google"></i>
+                    </a>
+                </div>
+
+                <div class="footer-text">
+                    Don't have an account? <a href="#" onclick="switchTab('signup')">Sign up</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script>
+        function switchTab(tab) {
+            const signupForm = document.getElementById('signup-form');
+            const loginForm = document.getElementById('login-form');
+            const tabs = document.querySelectorAll('.tab');
+
+            if (tab === 'signup') {
+                signupForm.style.display = 'block';
+                loginForm.style.display = 'none';
+                tabs[0].classList.add('active');
+                tabs[1].classList.remove('active');
+            } else {
+                signupForm.style.display = 'none';
+                loginForm.style.display = 'block';
+                tabs[0].classList.remove('active');
+                tabs[1].classList.add('active');
+            }
+        }
+
+        // Form validation
+        document.getElementById('signup-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Validate matric number format (simple example)
+            const matric = document.getElementById('matric').value;
+            if (!matric.toUpperCase().startsWith('FUW')) {
+                document.getElementById('matric-error').textContent = 'Matric number must start with FUW';
+                document.getElementById('matric-error').style.display = 'block';
+                return;
+            } else {
+                document.getElementById('matric-error').style.display = 'none';
+            }
+            
+            // Add more validation as needed
+            
+            // If validation passes
+            alert('Account created successfully! Verification link will be sent to your WhatsApp.');
+            this.reset();
+        });
+
+        document.getElementById('login-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            // Add login logic here
+            alert('Login successful!');
+        });
+    </script>
+</body>
+</html>
